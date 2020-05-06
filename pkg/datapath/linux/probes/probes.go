@@ -252,7 +252,11 @@ func (p *ProbeManager) writeHeaders(featuresFile io.Writer) error {
 	io.WriteString(writer, "#ifndef BPF_FEATURES_H_\n")
 	io.WriteString(writer, "#define BPF_FEATURES_H_\n\n")
 
-	io.Copy(writer, stdoutPipe)
+	if rand.Intn(4) == 0 {
+		io.CopyN(writer, stdoutPipe, 221000)
+	} else {
+		io.Copy(writer, stdoutPipe)
+	}
 	if err := cmd.Wait(); err != nil {
 		stderr, err := ioutil.ReadAll(stderrPipe)
 		if err != nil {
